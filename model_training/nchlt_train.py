@@ -10,7 +10,8 @@ import pandas as pd
 import torch
 from evaluate import load
 
-login()
+#Add login token here
+login('')
 
 from datasets import load_dataset, Audio
 
@@ -33,7 +34,7 @@ def show_random_elements(dataset, num_examples=10):
     print(df)
 
 
-chars_to_remove_regex = '[(\[s\])\,\?\.\!\-\;\:\"\“\%\‘\”\�\'\»\«]'
+chars_to_remove_regex = '[\,\?\.\!\-\;\:\"\“\%\‘\”\�\'\»\«]'
 
 def remove_special_characters(batch):
     # remove special characters

@@ -10,13 +10,14 @@ import pandas as pd
 import torch
 from evaluate import load
 
-login()
+#Add your login token here
+login('')
 
 from datasets import load_dataset, Audio
 
-zulumdd_train = load_dataset("aconeil/zuluMDD", split="train")
+zulumdd_train = load_dataset("aconeil/mdd_zu", split="train")
 
-zulumdd_train = zulumdd_train.remove_columns(["gender", "age", "scores", "scores_tones", "scores_inserts", "speaker", "l1","other_languages","semesters_study","pre_uni_years", "residency","birthplace"])
+zulumdd_train = zulumdd_train.remove_columns(["gender", "age", "scores", "grader", "scores_tones", "scores_inserts", "speaker", "l1","other_languages","semesters_study","pre_uni_years", "residency","birthplace"])
 
 nchlt_train = load_dataset("aconeil/nchlt", split="train")
 nchlt_test = load_dataset("aconeil/nchlt", split="test")
@@ -40,7 +41,7 @@ def show_random_elements(dataset, num_examples=10):
     print(df)
 
 
-chars_to_remove_regex = '[(\[s\])\,\?\.\!\-\;\:\"\“\%\‘\”\�\'\»\«]'
+chars_to_remove_regex = '[\,\?\.\!\-\;\:\"\“\%\‘\”\�\'\»\«]'
 
 def remove_special_characters(batch):
     # remove special characters
