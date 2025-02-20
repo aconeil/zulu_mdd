@@ -5,20 +5,23 @@ import torch
 import librosa
 
 #specify the model to load
-processor = AutoProcessor.from_pretrained("aconeil/w2v-bert-2.0-nchlt")
-model = Wav2Vec2BertForCTC.from_pretrained("aconeil/w2v-bert-2.0-nchlt") 
+processor = AutoProcessor.from_pretrained("aconeil/w2v-bert-2.0-zulumdd")
+model = Wav2Vec2BertForCTC.from_pretrained("aconeil/w2v-bert-2.0-zulumdd") 
 
 #Load the test dataset 
-test_dataset = load_dataset("aconeil/zuluMDD", split="test")
+test_dataset = load_dataset("aconeil/mdd_zu", split="test")
 
 #Specify name of output file
-output = open("nchlt_model_transcriptions.csv", "w")
+output = open("zulumdd_model_transcriptions.csv", "w")
 writer = csv.writer(output)
 writer.writerow(["model_output", "target", "scores", "scores_inserts"])
 
 #Loop through each recording in the dataset to get the models transcription and write to csv file
 #Note: This is likely to take a few hours
 for rec in test_dataset:
+    count = 1
+    print("On iteration:", count ,"/", len(test_dataset))
+    count += 1
     #Test audio sampling rate is 44100, but model requires resampling to 16000
     audio_array = librosa.resample(rec["audio"]["array"], orig_sr=44100, target_sr=16000)
     inputs = processor(audio_array, sampling_rate=16000, return_tensors="pt")
@@ -28,6 +31,7 @@ for rec in test_dataset:
     model_out = processor.batch_decode(predicted_ids)[0]
     target = rec["transcription"]
     score = rec["scores"]
+    #file_name = rec["file_name"]
     scores_inserts = rec["scores_inserts"]
-    writer.writerow([model_out, target, score, scores_inserts])
+    writer.writerow([model_out, target, score, scores_inserts])#, file_name])
 
